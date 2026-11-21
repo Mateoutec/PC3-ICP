@@ -1,0 +1,35 @@
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack-main
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=dynamodb,s3,sqs
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - tienda-net
+
+  tienda:
+    build: .
+    container_name: tienda-app
+    ports:
+      - "8080:5000"
+    depends_on:
+      - localstack
+    environment:
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    networks:
+      - tienda-net
+
+networks:
+  tienda-net:
+    driver: bridge
