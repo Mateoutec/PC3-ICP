@@ -1,0 +1,39 @@
+# Variables de entorno y credenciales (OBLIGATORIO: nunca subir al repositorio)
+.env
+*.env
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# LocalStack volume / datos locales
+volume/
+.localstack/
+
+# Archivos de sistema operativo y empaquetado
+.DS_Store
+Thumbs.db
+*.zip
+*.tar.gz
