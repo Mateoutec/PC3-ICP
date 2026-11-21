@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}TechStore PC3 - Computación Cognitiva{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bs-body-bg: #f8fafc;
+    }
+    body { min-height: 100vh; display: flex; flex-direction: column; font-family: system-ui, -apple-system, sans-serif; }
+    main { flex: 1; }
+    .navbar-brand { font-weight: 800; letter-spacing: -.5px; }
+    .card-product { transition: transform .2s, box-shadow .2s; border: none; }
+    .card-product:hover { transform: translateY(-4px); box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,.08); }
+    .card-product .card-img-top { height: 200px; object-fit: cover; background: #e2e8f0; }
+    .hero { background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%); color: #fff; padding: 2.5rem 0; margin-bottom: 2rem; }
+    footer { background: #0f172a; color: #94a3b8; padding: 1.5rem 0; font-size: .875rem; }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand text-primary" href="{{ url_for('catalogo') }}">
+        <i class="bi bi-cpu-fill"></i> TechStore <span class="badge bg-primary text-white fs-6">AWS PC3</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('catalogo') }}">
+              <i class="bi bi-grid-fill"></i> Catálogo
+            </a>
+          </li>
+          {% if session.get('logged_in') %}
+          <li class="nav-item">
+            <a class="nav-link text-warning" href="{{ url_for('admin') }}">
+              <i class="bi bi-shield-lock-fill"></i> Panel Admin
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+        <ul class="navbar-nav align-items-center">
+          <li class="nav-item me-3">
+            <a class="btn btn-outline-light position-relative" href="{{ url_for('carrito') }}">
+              <i class="bi bi-cart3"></i> Carrito
+              {% if cart_count > 0 %}
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ cart_count }}
+              </span>
+              {% endif %}
+            </a>
+          </li>
+          <li class="nav-item">
+            {% if session.get('logged_in') %}
+            <div class="d-flex align-items-center bg-secondary bg-opacity-25 px-2 py-1 rounded">
+              <img src="{{ user_avatar }}" class="rounded-circle border border-2 border-primary me-2" width="30" height="30" style="object-fit:cover;" alt="Avatar">
+              <span class="text-white small me-2">{{ session.get('username') }}</span>
+              <a class="btn btn-sm btn-outline-danger" href="{{ url_for('logout') }}" title="Cerrar sesión">
+                <i class="bi bi-box-arrow-right"></i>
+              </a>
+            </div>
+            {% else %}
+            <a class="btn btn-sm btn-primary" href="{{ url_for('login') }}">
+              <i class="bi bi-person-circle"></i> Acceso Admin
+            </a>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash messages -->
+  <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Main content -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-5">
+    <div class="container text-center">
+      <p class="mb-1"><strong>PC3 — Computación Cognitiva</strong> | Microservicios con LocalStack & Docker</p>
+      <p class="text-muted small mb-0">Servicios Emulados: AWS DynamoDB (Datos) · AWS S3 (Imágenes Usuario y Productos) · AWS SQS (Mensajería)</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
